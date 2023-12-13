@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/styles/reset.scss'
 import './assets/styles/iconfont.scss'
@@ -8,13 +8,19 @@ import './assets/styles/common.scss'
 import reportWebVitals from './reportWebVitals';
 import router from "./router/index";
 import { RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <Suspense>
+      <Provider store={store} >
+        <RouterProvider router={router}></RouterProvider>
+      </Provider>
+    </Suspense>
   </React.StrictMode>
 );
 
