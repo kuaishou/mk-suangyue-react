@@ -2,25 +2,25 @@ import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { type } from "os";
 import http from "../../utils/http";
 
-type Token = string
-type Infos = {
+export type Token = string
+export type Infos = {
     [index: string]: unknown
 }
-type UsersState = {
+export type UsersState = {
     token: Token
     infos: Infos
 }
 
-type Login = {
+export type Login = {
     emali: string
     pass: string
 }
 export const loginAction = createAsyncThunk('users/loginAction', async (payload: Login) => {
-    const res = http.post('users/login', payload)
+    const res = await http.post('users/login', payload)
     return res
 })
 export const infosAction = createAsyncThunk('users/infosAction', async (payload: Login) => {
-    const res = http.get('users/infos', payload)
+    const res = await http.get('users/infos', payload)
     return res
 })
 const usersSlice = createSlice({
@@ -39,9 +39,7 @@ const usersSlice = createSlice({
         updateInfos(state, action: PayloadAction<Infos>) {//更新信息
             state.infos = action.payload
         }
-
     }
-
 })
 
 export const { updateToken, clearToken, updateInfos } = usersSlice.actions  //统一导出方法
