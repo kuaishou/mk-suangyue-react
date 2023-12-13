@@ -4,15 +4,17 @@ import './assets/styles/reset.scss'
 import './assets/styles/iconfont.scss'
 import './assets/styles/common.scss'
 // import './index.css';
-import App from './App';
+// import App from './App';
 import reportWebVitals from './reportWebVitals';
+import router from "./router/index";
+import { RouterProvider } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router}></RouterProvider>
   </React.StrictMode>
 );
 
