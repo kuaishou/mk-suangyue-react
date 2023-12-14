@@ -18,8 +18,8 @@ export const loginAction = createAsyncThunk('users/loginAction', async (payload:
     const res = await http.post('users/login', payload)
     return res
 })
-export const infosAction = createAsyncThunk('users/infosAction', async (payload: User) => {
-    const res = await http.get('users/infos', payload)
+export const infosAction = createAsyncThunk('users/infosAction', async () => {
+    const res = await http.get('users/infos')
     return res
 })
 const usersSlice = createSlice({
