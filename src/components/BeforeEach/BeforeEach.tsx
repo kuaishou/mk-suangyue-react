@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, matchRoutes, useLocation } from 'react-router-dom'
 import { routes } from '../../router'
-import { infosAction, updateInfos } from '../../store/modules/users'
+import { infosAction, updateInfos, Infos } from '../../store/modules/users'
 import { RootState, useAppDispath } from '../../store'
 import _ from "lodash"
 import { useSelector } from 'react-redux'
@@ -12,7 +12,6 @@ interface BeforeEachProps {
 const BeforeEach: React.FC<BeforeEachProps> = (props) => {
     const { children } = props
     const token = useSelector((store: RootState) => store.users.token)
-    const infos = useSelector((store: RootState) => store.users.infos)
     const dispatch = useAppDispath()
     const location = useLocation()
     const matchs = matchRoutes(routes, location)
@@ -21,9 +20,9 @@ const BeforeEach: React.FC<BeforeEachProps> = (props) => {
         if (meta?.auth) {
             if (token) {
                 dispatch(infosAction()).then((action) => {
-                    const { errcode, token } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+                    const { errcode, infos } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
                     if (errcode === 0) {
-                        dispatch(updateInfos(infos))
+                        dispatch(updateInfos(infos as Infos))
                     }
                 })
             } else {

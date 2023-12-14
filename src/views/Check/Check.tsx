@@ -1,9 +1,9 @@
 
-const Home = () => {
+const Check = () => {
 
     return <>
         <div>我是主页</div>
     </>
 }
 
-export default Home
+export default Check

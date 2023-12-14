@@ -20,7 +20,8 @@ declare module 'react-router' {
             title?: string
             icon?: React.ReactNode
             auth?: boolean
-        }
+        },
+        name?: string
     }
     interface NonIndexRouteObject {
         meta?: {
@@ -28,7 +29,8 @@ declare module 'react-router' {
             title?: string
             icon?: React.ReactNode
             auth?: boolean
-        }
+        },
+        name?: string
     }
 }
 
@@ -41,6 +43,7 @@ export const routes: RouteObject[] = [
     },
     {
         path: '/',
+        name: 'home',
         element: React.createElement(BeforeEach, null, React.createElement(Home)),
         meta: {
             menu: true,
@@ -51,6 +54,7 @@ export const routes: RouteObject[] = [
         children: [
             {
                 path: 'sign',
+                name: 'sign',
                 meta: {
                     menu: true,
                     title: '在线打卡签到',
@@ -61,6 +65,7 @@ export const routes: RouteObject[] = [
             },
             {
                 path: 'exception',
+                name: 'exception',
                 meta: {
                     menu: true,
                     title: '异常考勤查询',
@@ -71,6 +76,7 @@ export const routes: RouteObject[] = [
             },
             {
                 path: 'apply',
+                name: 'apply',
                 meta: {
                     menu: true,
                     title: '添加考勤审批',
@@ -81,6 +87,7 @@ export const routes: RouteObject[] = [
             },
             {
                 path: 'check',
+                name: 'check',
                 meta: {
                     menu: true,
                     title: '我的考勤审批',
