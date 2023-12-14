@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { type } from "os";
 import http from "../../utils/http";
 
 export type Token = string
@@ -11,15 +10,15 @@ export type UsersState = {
     infos: Infos
 }
 
-export type Login = {
-    emali: string
+export type User = {
+    email: string
     pass: string
 }
-export const loginAction = createAsyncThunk('users/loginAction', async (payload: Login) => {
+export const loginAction = createAsyncThunk('users/loginAction', async (payload: User) => {
     const res = await http.post('users/login', payload)
     return res
 })
-export const infosAction = createAsyncThunk('users/infosAction', async (payload: Login) => {
+export const infosAction = createAsyncThunk('users/infosAction', async (payload: User) => {
     const res = await http.get('users/infos', payload)
     return res
 })
