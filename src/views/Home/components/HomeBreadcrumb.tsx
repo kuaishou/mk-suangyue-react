@@ -1,16 +1,18 @@
-import { Outlet } from 'react-router-dom'
+import { matchRoutes, useLocation } from 'react-router-dom'
 import styles from '../Home.module.scss'
 import { Breadcrumb } from 'antd'
-interface IProps {
-    name?: string
-}
-const HomeBreadcrumb: React.FC<IProps> = (props) => {
+import { routes } from '../../../router'
 
+const HomeBreadcrumb: React.FC = () => {
+
+    const location = useLocation()
+    const matchs = matchRoutes(routes, location)
+    console.log(matchs)
     return <>
         <Breadcrumb className={styles.homeBreadcrumb}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            {matchs?.map(item => {
+                return <Breadcrumb.Item key={item.pathnameBase}>{item.route.meta?.title}</Breadcrumb.Item>
+            })}
         </Breadcrumb>
     </>
 }

@@ -1,7 +1,6 @@
-import { Link, Outlet, matchRoutes, useLocation } from 'react-router-dom'
+import { Link, matchRoutes, useLocation } from 'react-router-dom'
 import styles from '../Home.module.scss'
 import { Menu, MenuProps } from 'antd'
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
@@ -12,7 +11,6 @@ const HomeAside: React.FC = () => {
 
     const location = useLocation()
     const matchs = matchRoutes(routes, location)
-    console.log('mattt', matchs)
     const subPath = matchs![0].pathnameBase || ''
     const path = matchs![1].pathnameBase || ''
 
