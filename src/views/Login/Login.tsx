@@ -4,6 +4,7 @@ import { RootState, useAppDispath } from '../../store'
 import { loginAction, updateToken, User } from '../../store/modules/users'
 import { Button, Col, Form, Input, Row, message } from 'antd'
 import classNames from 'classnames'
+import { useNavigate } from 'react-router-dom'
 
 
 const testUsers: User[] = [
@@ -17,7 +18,7 @@ const testUsers: User[] = [
     }
 ];
 const Login = () => {
-
+    const navigate = useNavigate()
     const token = useSelector((state: RootState) => state.users.token)
     const dispatch = useAppDispath()
     const handleLogin = (user: User) => {
@@ -26,24 +27,16 @@ const Login = () => {
             if (errcode === 0) {
                 dispatch(updateToken(token as string))
                 message.success('登录成功')
+                navigate('/')
             } else {
-                message.success('登录失败')
+                message.error('登录失败')
             }
         })
     }
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
-    };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-    const autoLogin = (item: User) => {
-        console.log('登录', item)
-
-    }
-
-
     return <div className={styles.login}>
         <div className={styles.header}>
             <span className={styles.headerLogo}>
@@ -63,14 +56,17 @@ const Login = () => {
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 600 }}
             initialValues={{ remember: true }}
-            onFinish={onFinish}
+            onFinish={handleLogin}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
             <Form.Item<User>
                 label="邮箱"
                 name="email"
-                rules={[{ required: true, message: '请输入邮箱' }]}
+                rules={[
+                    { required: true, message: '请输入邮箱' },
+                    { type: 'email', message: '请输入正确的邮箱' }
+                ]}
             >
                 <Input placeholder='请输入邮箱' />
             </Form.Item>
