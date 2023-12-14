@@ -1,5 +1,5 @@
 import React, { lazy } from "react"
-import { RouteObject, createBrowserRouter } from "react-router-dom"
+import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom"
 import { CalendarOutlined, CopyFilled, FileAddFilled, ScheduleFilled, ScheduleOutlined, WarningFilled } from "@ant-design/icons"
 
 const Home = lazy(() => import('../views/Home/Home'))
@@ -35,6 +35,10 @@ declare module 'react-router' {
 
 
 export const routes: RouteObject[] = [
+    {//重定向到二级页面sign
+        path: '/',
+        element: React.createElement(Navigate, { to: '/sign' }),
+    },
     {
         path: '/',
         element: React.createElement(BeforeEach, null, React.createElement(Home)),

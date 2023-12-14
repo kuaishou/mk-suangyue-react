@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux'
 import styles from './Login.module.scss'
-import { RootState, useAppDispath } from '../../store'
+import { useAppDispath } from '../../store'
 import { loginAction, updateToken, User } from '../../store/modules/users'
 import { Button, Col, Form, Input, Row, message } from 'antd'
 import classNames from 'classnames'
@@ -19,7 +18,6 @@ const testUsers: User[] = [
 ];
 const Login = () => {
     const navigate = useNavigate()
-    const token = useSelector((state: RootState) => state.users.token)
     const dispatch = useAppDispath()
     const handleLogin = (user: User) => {
         dispatch(loginAction(user)).then((action) => {
