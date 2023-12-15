@@ -7,7 +7,6 @@ const HomeBreadcrumb: React.FC = () => {
 
     const location = useLocation()
     const matchs = matchRoutes(routes, location)
-    console.log(matchs)
     return <>
         <Breadcrumb className={styles.homeBreadcrumb}>
             {matchs?.map(item => {

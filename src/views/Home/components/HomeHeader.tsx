@@ -23,7 +23,7 @@ const items1: MenuProps['items'] = [
 ];
 
 
-const HomeHeader: React.FC<IProps> = (props) => {
+const HomeHeader: React.FC<IProps> = () => {
 
   const name = useSelector((state: RootState) => state.users.infos.name) as string
   const head = useSelector((state: RootState) => state.users.infos.head) as string
