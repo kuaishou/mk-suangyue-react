@@ -1,6 +1,15 @@
-.descriptions{
+.descriptions {
     margin: 10px;
 }
-.calendarHeader{
+
+.calendarHeader {
     margin: 20px;
+}
+
+.showTime {
+    text-align: center;
+    line-height: 60px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }

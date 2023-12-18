@@ -1,5 +1,6 @@
 import { AnyAction, Reducer, configureStore } from '@reduxjs/toolkit'
 import usersReducer, { UsersState } from './modules/users'
+import siginsReducer, { siginsState } from './modules/signs'
 
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -15,6 +16,7 @@ const persistConfig = {//持久化配置
 const store = configureStore({
     reducer: {
         users: persistReducer(persistConfig, usersReducer) as Reducer<UsersState & PersistPartial, AnyAction>,//选择只持久化counter模块
+        signs: persistReducer(persistConfig, siginsReducer) as Reducer<siginsState & PersistPartial, AnyAction>,//选择只持久化counter模块
     },
     middleware: (getDefaultMiddleware) =>//持久化配置
         getDefaultMiddleware({

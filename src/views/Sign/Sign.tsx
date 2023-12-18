@@ -1,15 +1,21 @@
-import { Button, Calendar, Descriptions, DescriptionsProps, Row, Select, Space, Tag } from "antd"
+import { Button, Calendar, Descriptions, DescriptionsProps, Row, Select, Space, Tag, message } from "antd"
 import styles from './Sign.module.scss'
 import locale from 'antd/es/date-picker/locale/zh_CN';
-
 import 'dayjs/locale/zh-cn';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispath } from "../../store";
+import { Infos, getTimeAction, putTimeAction, updateInfos } from "../../store/modules/signs";
+import { Dayjs } from "dayjs";
+import { toZero } from "../../utils/common";
 const date = new Date()
 
 
 const Home: React.FC = () => {
-
+    const dispatch = useAppDispath()
+    const usersInfos = useSelector((state: RootState) => state.users.infos)
+    const signsInfos = useSelector((state: RootState) => state.signs.infos)
     const [month, setMonth] = useState(date.getMonth())
     const navigate = useNavigate()
     const hangDetal = () => {
@@ -66,11 +72,40 @@ const Home: React.FC = () => {
             children: <Tag color={detailState.text}>{detailState.type}</Tag>,
         },
     ];
+    const cellRender = (value: Dayjs) => {
+        console.log('toZero(value.month()', toZero(value.month()))
+        const month = signsInfos.time && (signsInfos.time as { [index: string]: unknown })[toZero(value.month() + 1)]
+        const date = month && (month as { [index: string]: unknown })[toZero(value.date())]
+        let res = ''
+        if (Array.isArray(date)) {
+            res = date.join(' - ')
+        }
+        return <div className={styles.showTime}>{res}</div>
+    }
+    const handSign = () => {
+        dispatch(putTimeAction({ userid: usersInfos._id as string })).then((action) => {
+            const { errcode, infos } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+            if (errcode === 0) {
+                dispatch(updateInfos(infos as Infos))
+                message.success('签到成功')
+            }
+        })
+    }
+    useEffect(() => {
+
+        dispatch(getTimeAction({ userid: usersInfos._id as string })).then((action) => {
+            const { errcode, infos } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+            if (errcode === 0) {
+                dispatch(updateInfos(infos as Infos))
+            }
+        })
+    }, [usersInfos, dispatch])
     return <>
         <div>
             <Descriptions className={styles.descriptions} column={9} bordered layout="vertical" items={items} />
             <Calendar
                 locale={locale}
+                cellRender={cellRender}
                 headerRender={({ value, type, onChange, onTypeChange }) => {
                     const monthOption = []
                     for (let i = 0; i < 12; i++) {
@@ -78,7 +113,7 @@ const Home: React.FC = () => {
                     }
                     return (
                         <Row className={styles.calendarHeader} justify='space-between' align='middle'>
-                            <Button type="primary">在线签到</Button>
+                            <Button type="primary" onClick={handSign}>在线签到</Button>
                             <Space>
                                 <Button>{value.year()}</Button>
                                 <Select value={month} onChange={(newMonth) => {
