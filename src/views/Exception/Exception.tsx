@@ -2,7 +2,7 @@
 const Home = () => {
 
     return <>
-        <div>我是主页</div>
+        <div>我是主想起我页</div>
     </>
 }
 

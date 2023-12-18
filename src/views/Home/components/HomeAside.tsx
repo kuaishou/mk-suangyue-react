@@ -40,8 +40,8 @@ const HomeAside: React.FC = () => {
         <Menu
             className={styles.homeAside}
             mode="inline"
-            defaultSelectedKeys={[path]}
-            defaultOpenKeys={[subPath]}
+            selectedKeys={[path]}
+            openKeys={[subPath]}
             items={items}
         />
     </>
