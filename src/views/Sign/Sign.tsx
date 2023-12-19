@@ -12,19 +12,30 @@ import { toZero } from "../../utils/common";
 const date = new Date()
 
 
-const Home: React.FC = () => {
+const Sign: React.FC = () => {
     const dispatch = useAppDispath()
     const usersInfos = useSelector((state: RootState) => state.users.infos)
     const signsInfos = useSelector((state: RootState) => state.signs.infos)
     const [month, setMonth] = useState(date.getMonth())
     const navigate = useNavigate()
     const hangDetal = () => {
-        navigate('/exception')
+        navigate(`/exception?month=${month + 1}`)
     }
-    const detailState = {
+    const initdetailState = {
         type: 'success' as 'success' | 'error',
         text: '正常' as '正常' | '异常'
     }
+    const initdetailValue = {
+        normal: 0,
+        absent: 0,
+        miss: 0,
+        late: 0,
+        early: 0,
+        lateAndEarly: 0,
+    }
+    const [detailValue, setDetailValue] = useState({ ...initdetailValue })
+    const [detailState, setDetailState] = useState({ ...initdetailState })
+
     const items: DescriptionsProps['items'] = [
         {
             key: '1',
@@ -34,32 +45,32 @@ const Home: React.FC = () => {
         {
             key: 'normal',
             label: '正常出勤',
-            children: 0,
+            children: detailValue.normal,
         },
         {
             key: 'absent',
             label: '旷工',
-            children: 0,
+            children: detailValue.absent,
         },
         {
             key: 'miss',
             label: '漏打卡',
-            children: 0,
+            children: detailValue.miss,
         },
         {
             key: 'late',
             label: '迟到',
-            children: 0,
+            children: detailValue.late,
         },
         {
             key: 'early',
             label: '早退',
-            children: 0,
+            children: detailValue.early,
         },
         {
             key: 'lateAndEarly',
             label: '迟到并早退',
-            children: 0,
+            children: detailValue.lateAndEarly,
         },
         {
             key: '8',
@@ -69,11 +80,10 @@ const Home: React.FC = () => {
         {
             key: '9',
             label: '考勤状态',
-            children: <Tag color={detailState.text}>{detailState.type}</Tag>,
+            children: <Tag color={detailState.type}>{detailState.text}</Tag>,
         },
     ];
     const cellRender = (value: Dayjs) => {
-        console.log('toZero(value.month()', toZero(value.month()))
         const month = signsInfos.time && (signsInfos.time as { [index: string]: unknown })[toZero(value.month() + 1)]
         const date = month && (month as { [index: string]: unknown })[toZero(value.date())]
         let res = ''
@@ -91,6 +101,58 @@ const Home: React.FC = () => {
             }
         })
     }
+    useEffect(() => {
+        if (signsInfos.detail) {
+            const detailMonth = signsInfos.detail && (signsInfos.detail as { [index: string]: unknown })[toZero(month + 1)] as { [index: string]: unknown }
+            console.log('toZero(value.month()', detailMonth)
+            for (let attr in detailMonth) {
+                switch (detailMonth[attr]) {
+                    case '正常出勤':
+                        initdetailValue.normal++
+                        break;
+                    case '旷工':
+                        initdetailValue.absent++
+                        break;
+                    case '漏打卡':
+                        initdetailValue.miss++
+                        break;
+                    case '迟到':
+                        initdetailValue.late++
+                        break;
+                    case '早退':
+                        initdetailValue.early++
+                        break;
+                    case '迟到并早退':
+                        initdetailValue.lateAndEarly++
+                        break;
+                }
+            }
+            setDetailValue({ ...initdetailValue })
+
+            for (let attr in initdetailValue) {
+                if (attr !== 'normal' && initdetailValue[attr as keyof typeof initdetailValue] !== 0) {
+                    setDetailState({
+                        type: 'error',
+                        text: '异常'
+                    })
+                }
+
+
+            }
+        }
+
+        return () => {
+            setDetailState({
+                type: 'success',
+                text: '正常'
+            })
+            for (let attr in initdetailValue) {
+
+                initdetailValue[attr as keyof typeof initdetailValue] = 0
+            }
+        }
+
+    }, [signsInfos, month])
     useEffect(() => {
 
         dispatch(getTimeAction({ userid: usersInfos._id as string })).then((action) => {
@@ -130,4 +192,4 @@ const Home: React.FC = () => {
     </>
 }
 
-export default Home
+export default Sign
