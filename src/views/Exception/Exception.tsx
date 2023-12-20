@@ -36,6 +36,11 @@ const Exception = () => {
             return "暂无打卡记录"
         }
     }
+    const applyListMonth = applyList.filter((item) => {
+        const startTime = (item.time as string[])[0].split(' ')[0].split('-')
+        const enttTime = (item.time as string[])[1].split(' ')[0].split('-')
+        return startTime[1] <= toZero(month + 1) && enttTime[1] >= toZero(month + 1)
+    })
     useEffect(() => {
         dispatch(getTimeAction({ userid: usersInfos._id as string })).then((action) => {
             const { errcode, infos } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
@@ -85,22 +90,28 @@ const Exception = () => {
                             })}
 
                         </Timeline>
-                        : <Empty description='暂无申请审批' imageStyle={{ height: 200 }} />
+                        : <Empty description='暂无考勤记录' imageStyle={{ height: 200 }} />
                     }
                 </Col>
                 <Col span='12'>
-                    <Timeline>
-                        <Timeline.Item>
-                            <h3>事假</h3>
-                            <Card className={styles.itemCard}>
-                                <Space>
-                                    <h4>旷工</h4>
-                                    <p className={styles.itemContent}>暂无打卡记录</p>
-                                    <p className={styles.itemContent}>暂无打卡记录</p>
-                                </Space>
-                            </Card>
-                        </Timeline.Item>
-                    </Timeline>
+                    {applyListMonth.length > 0 ?
+                        <Timeline>
+                            {applyListMonth.map((item) => {
+                                return <Timeline.Item key={item._id as string}>
+                                    <h3>{item.reason as string}</h3>
+                                    <Card className={styles.itemCard}>
+                                        <h4>{item.state as string}</h4>
+                                        <p className={styles.itemContent}>申请日期 : {(item.time as string[]).join('-')}</p>
+                                        <p className={styles.itemContent}>申请详情 : {item.note as string}</p>
+                                    </Card>
+                                </Timeline.Item>
+                            })}
+
+                        </Timeline>
+                        : <Empty description='暂无申请审批' imageStyle={{ height: 200 }} />
+
+                    }
+
                 </Col>
             </Row>
         </div>
