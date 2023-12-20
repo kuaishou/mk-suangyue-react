@@ -6,6 +6,7 @@ import { ColumnsType } from "antd/es/table";
 import { Infos, getApplyAction, putApplyAction, updateCheckList } from "../../store/modules/checks";
 import { RootState, useAppDispath } from "../../store";
 import { useSelector } from "react-redux";
+import { Info, getRemindAction, putRemindAction, updateNewsInfos } from "../../store/modules/news";
 
 const applyTypeOption = [
     { label: '全部', value: '全部' },
@@ -31,7 +32,7 @@ const Check = () => {
             }
         })
     }, [usersInfos, dispatch])
-    const handlePutApply = (_id: string, state: "已通过" | "未通过") => {
+    const handlePutApply = (_id: string, state: "已通过" | "未通过", applicantid: string) => {
         dispatch(putApplyAction({ _id, state })).then((action) => {
             const { errcode } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
             if (errcode === 0) {
@@ -42,9 +43,24 @@ const Check = () => {
                         dispatch(updateCheckList(rets as Infos[]))
                     }
                 })
+                dispatch(putRemindAction({ userid: applicantid, applicant: true }))
             }
         })
     }
+    const _id = useSelector((state: RootState) => state.users.infos._id) as string
+    const newsInfo = useSelector((state: RootState) => state.news.info)
+    useEffect(() => {
+        if (newsInfo.approver) {
+            dispatch(putRemindAction({ userid: _id, approver: false })).then((action) => {
+                const { errcode, info } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+                if (errcode === 0) {
+                    dispatch(updateNewsInfos(info as Info))
+                }
+            })
+        }
+
+    }, [_id, newsInfo, dispatch])
+
     const columns: ColumnsType<Infos> = [
         {
             title: '申请人',
@@ -78,9 +94,9 @@ const Check = () => {
                     <Space>
                         <Button type="primary" shape="circle" size='small' icon={<CheckOutlined />}
                             style={{ backgroundColor: '#67c23a', border: '1px #67c23a solid' }}
-                            onClick={() => handlePutApply(record._id as string, '已通过')} />
+                            onClick={() => handlePutApply(record._id as string, '已通过', record.applicantid as string)} />
                         <Button type="primary" shape="circle" size='small' icon={<CloseOutlined />}
-                            onClick={() => handlePutApply(record._id as string, '未通过')} />
+                            onClick={() => handlePutApply(record._id as string, '未通过', record.applicantid as string)} />
                     </Space>
                 )
 

@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import 'dayjs/locale/zh-cn';
 import dayjs from 'dayjs'
+import { Info, putRemindAction, updateNewsInfos } from "../../store/modules/news";
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const columns: ColumnsType<Infos> = [
@@ -73,6 +74,19 @@ const Apply = () => {
             }
         })
     }, [usersInfos, dispatch])
+    const _id = useSelector((state: RootState) => state.users.infos._id) as string
+    const newsInfo = useSelector((state: RootState) => state.news.info)
+    useEffect(() => {
+        if (newsInfo.applicant) {
+            dispatch(putRemindAction({ userid: _id, applicant: false })).then((action) => {
+                const { errcode, info } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+                if (errcode === 0) {
+                    dispatch(updateNewsInfos(info as Info))
+                }
+            })
+        }
+
+    }, [_id, newsInfo, dispatch])
     const showModal = () => {
         setIsModalOpen(true);
 
@@ -106,6 +120,7 @@ const Apply = () => {
                         dispatch(updateApplyList(rets as Infos[]))
                     }
                 })
+                dispatch(putRemindAction({ userid: params.approverid, approver: true }))
             }
         })
     }
