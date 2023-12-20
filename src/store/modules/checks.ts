@@ -6,11 +6,11 @@ export type Infos = {
 }
 export type siginsState = {
     applyList: Infos[]
-    chectList: Infos[]
+    checkList: Infos[]
 }
 
 export type GetApply = {
-    applicantid: string;
+    applicantid?: string;
     approverid?: string;
 }
 export type PostApply = {
@@ -36,7 +36,7 @@ export const postApplyAction = createAsyncThunk('checks/postApplyAction', async 
     const res = await http.post('checks/apply', payload)
     return res
 })
-export const putApplyAction = createAsyncThunk('checks/putApplyAction', async (payload: PostApply) => {
+export const putApplyAction = createAsyncThunk('checks/putApplyAction', async (payload: PutApply) => {
     const res = await http.put('checks/apply', payload)
     return res
 })
@@ -45,18 +45,18 @@ const checksSlice = createSlice({
     name: 'signs',
     initialState: {
         applyList: [],
-        chectList: []
+        checkList: []
     } as siginsState,
     reducers: {
         updateApplyList(state, action: PayloadAction<Infos[]>) {//更新信息
             state.applyList = action.payload
         },
-        updateChectList(state, action: PayloadAction<Infos[]>) {//更新信息
-            state.applyList = action.payload
+        updateCheckList(state, action: PayloadAction<Infos[]>) {//更新信息
+            state.checkList = action.payload
         }
     }
 })
 
-export const { updateApplyList, updateChectList } = checksSlice.actions  //统一导出方法
+export const { updateApplyList, updateCheckList } = checksSlice.actions  //统一导出方法
 
 export default checksSlice.reducer
