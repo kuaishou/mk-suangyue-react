@@ -33,7 +33,7 @@ export const getApplyAction = createAsyncThunk('checks/getApplyAction', async (p
     return res
 })
 export const postApplyAction = createAsyncThunk('checks/postApplyAction', async (payload: PostApply) => {
-    const res = await http.get('checks/apply', payload)
+    const res = await http.post('checks/apply', payload)
     return res
 })
 export const putApplyAction = createAsyncThunk('checks/putApplyAction', async (payload: PostApply) => {

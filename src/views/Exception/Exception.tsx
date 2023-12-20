@@ -7,6 +7,7 @@ import { RootState, useAppDispath } from "../../store"
 import { useSelector } from "react-redux"
 import { Infos, getTimeAction, updateInfos } from "../../store/modules/signs"
 import { toZero } from "../../utils/common"
+import { getApplyAction, updateApplyList } from "../../store/modules/checks"
 
 const date = new Date()
 const year = date.getFullYear()
@@ -16,6 +17,7 @@ const Exception = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const usersInfos = useSelector((state: RootState) => state.users.infos)
     const signsInfos = useSelector((state: RootState) => state.signs.infos)
+    const applyList = useSelector((state: RootState) => state.checks.applyList)
     const [month, setMonth] = useState(searchParams.get('month') ? (Number(searchParams.get('month')) - 1) : date.getMonth())
     const monthOption = []
     for (let i = 0; i < 12; i++) {
@@ -35,13 +37,18 @@ const Exception = () => {
         }
     }
     useEffect(() => {
-
         dispatch(getTimeAction({ userid: usersInfos._id as string })).then((action) => {
             const { errcode, infos } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
             if (errcode === 0) {
                 console.log(infos)
 
                 dispatch(updateInfos(infos as Infos))
+            }
+        })
+        dispatch(getApplyAction({ applicantid: usersInfos._id as string })).then((action) => {
+            const { errcode, rets } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+            if (errcode === 0) {
+                dispatch(updateApplyList(rets as Infos[]))
             }
         })
     }, [usersInfos, dispatch])
