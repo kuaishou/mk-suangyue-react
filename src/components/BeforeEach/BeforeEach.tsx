@@ -12,12 +12,16 @@ interface BeforeEachProps {
 const BeforeEach: React.FC<BeforeEachProps> = (props) => {
     const { children } = props
     const token = useSelector((store: RootState) => store.users.token)
+    const infos = useSelector((store: RootState) => store.users.infos)
     const dispatch = useAppDispath()
     const location = useLocation()
     const matchs = matchRoutes(routes, location)
     if (Array.isArray(matchs)) {
+
         const meta = matchs[matchs.length - 1].route.meta
-        if (meta?.auth) {
+        const localName = matchs[matchs.length - 1].route.name
+
+        if (meta?.auth && _.isEmpty(infos)) {
             if (token) {
                 dispatch(infosAction()).then((action) => {
                     const { errcode, infos } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
@@ -28,6 +32,8 @@ const BeforeEach: React.FC<BeforeEachProps> = (props) => {
             } else {
                 return <Navigate to='./login' />
             }
+        } else if (Array.isArray((infos as Infos).permission) && !((infos as Infos).permission as string[]).includes(localName as string)) {
+            return <Navigate to='/403' />
         }
     }
     if (token && location.pathname === '/login') {

@@ -8,10 +8,10 @@ const Check = lazy(() => import('../views/Check/Check'))
 const Exception = lazy(() => import('../views/Exception/Exception'))
 const Apply = lazy(() => import('../views/Apply/Apply'))
 const Login = lazy(() => import('../views/Login/Login'))
+const BeforeEach = lazy(() => import('../components/BeforeEach/BeforeEach'))
 const NotAuth = lazy(() => import('../views/NotAuth/NotAuth'))
 const NotFound = lazy(() => import('../views/NotFound/NotFound'))
 const NotServer = lazy(() => import('../views/NotServer/NotServer'))
-const BeforeEach = lazy(() => import('../components/BeforeEach/BeforeEach'))
 
 declare module 'react-router' {
     interface IndexRouteObject {
@@ -102,7 +102,22 @@ export const routes: RouteObject[] = [
         path: 'login',
         element: React.createElement(BeforeEach, null, React.createElement(Login)),
     },
-
+    {
+        path: '/403',
+        element: React.createElement(NotAuth)
+    },
+    {
+        path: '/404',
+        element:  React.createElement(NotFound)
+    },
+    {
+        path: '/500',
+        element: React.createElement(NotServer),
+    },
+    {
+        path: '*',
+        element: React.createElement(Navigate, { to: '/404' }),
+    },
 ]
 
 const router = createBrowserRouter(routes)

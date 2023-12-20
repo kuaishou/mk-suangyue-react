@@ -17,7 +17,7 @@ const HomeAside: React.FC = () => {
     const permission = useSelector((state: RootState) => state.users.infos.permission) as unknown[]
     const menus = _.cloneDeep(routes).filter((v) => {
         v.children = v?.children?.filter((v1) => v1.meta?.menu && permission?.includes(v1.name))
-        return v.meta?.menu && permission.includes(v.name)
+        return v.meta?.menu && permission?.includes(v.name)
     })
     const items: MenuProps['items'] = menus.map((v1) => {
         const children = v1.children?.map(v2 => {
